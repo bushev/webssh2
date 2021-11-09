@@ -20,6 +20,14 @@ const io = require('socket.io')(server, {
   serveClient: false,
   path: '/ssh/socket.io',
   origins: config.http.origins,
+  cors: {
+    origin: "*",
+  },
+  allowRequest: (req, callback)=>{
+    console.log(333, req);
+
+    return callback(null, true)
+  }
 });
 const session = require('express-session')({
   secret: config.session.secret,

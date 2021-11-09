@@ -347,7 +347,7 @@ module.exports = function appSocket(socket) {
           }
         }
         socket.emit('ssherror', `SSH ${myFunc}${theError}`);
-        socket.request.session.destroy();
+        // socket.request.session.destroy();
         socket.disconnect(true);
       } else {
         theError = err ? `: ${err.message}` : '';
@@ -528,7 +528,7 @@ module.exports = function appSocket(socket) {
         )}`
       );
       socket.emit('ssherror', 'WEBSOCKET ERROR - Refresh the browser and try again');
-      socket.request.session.destroy();
+      // socket.request.session.destroy();
       socket.disconnect(true);
     }
   }

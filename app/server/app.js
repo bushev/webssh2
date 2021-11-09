@@ -24,7 +24,8 @@ const io = require('socket.io')(server, {
     origin: "*",
   },
   allowRequest: (req, callback)=>{
-    console.log(333, req);
+    console.log(333, req._query);
+    console.log(333, req.query);
 
     return callback(null, true)
   }
@@ -94,7 +95,6 @@ app.get('/ssh/reauth', (req, res) => {
 
 // eslint-disable-next-line complexity
 app.get('/ssh/host/:host?', (req, res) => {
-  console.log(111111111, req.params.host);
   res.sendFile(path.join(path.join(publicPath, 'client.htm')));
   // capture, assign, and validate variables
   req.session.ssh = {

@@ -251,8 +251,41 @@ let termRows;
 
 
 module.exports = function appSocket(socket) {
-  console.log(3333444, socket.request);
+  // console.log(3333444, socket.request);
+
+
+
   async function setupConnection() {
+
+    socket.request.session = {
+      ...socket.request.session,
+      username: 'user',
+      userpassword: '123456',
+      privatekey: null,
+      ssh: {
+        host: '127.0.0.1',
+        port: 22,
+        header: { name: null, background: 'green' },
+        algorithms: { kex: [Array], cipher: [Array], hmac: [Array], compress: [Array] },
+        keepaliveInterval: 120000,
+        keepaliveCountMax: 10,
+        allowedSubnets: [],
+        term: 'xterm-color',
+        terminal: {
+          cursorBlink: true,
+          scrollback: 10000,
+          tabStopWidth: 8,
+          bellStyle: 'sound'
+        },
+        allowreplay: true,
+        allowreauth: true,
+        mrhsession: 'none',
+        serverlog: { client: false, server: false },
+        readyTimeout: 20000
+      }
+    }
+
+
     // if websocket connection arrives without an express session, kill it
     if (!socket.request.session) {
       socket.emit('401 UNAUTHORIZED');

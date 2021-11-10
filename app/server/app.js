@@ -11,6 +11,7 @@ const nodeRoot = path.dirname(require.main.filename);
 const publicPath = path.join(nodeRoot, 'client', 'public');
 const express = require('express');
 const logger = require('morgan');
+const cors = require('cors');
 
 const app = express();
 const server = require('http').Server(app);
@@ -25,7 +26,7 @@ const io = require('socket.io')(server, {
   },
   allowRequest: (req, callback)=>{
     console.log(2222, req.session);
-    
+
     return callback(null, true)
   }
 });
@@ -71,6 +72,7 @@ function stopApp(reason) {
 
 module.exports = { server, config };
 // express
+app.use(cors());
 app.use(safeShutdownGuard);
 io.use(function(socket, next) {
   session(socket.request, socket.request.res || {}, next);

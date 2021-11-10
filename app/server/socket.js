@@ -256,56 +256,6 @@ module.exports = function appSocket(socket) {
 
 
   async function setupConnection() {
-
-    // socket.request.session = {
-    //   username: 'user',
-    //   userpassword: '123456',
-    //   privatekey: null,
-    //   ssh: {
-    //     host: '127.0.0.1',
-    //     port: 22,
-    //     header: { name: null, background: 'green' },
-    //     algorithms: { 
-    //       kex: [
-    //         'ecdh-sha2-nistp256',
-    //         'ecdh-sha2-nistp384',
-    //         'ecdh-sha2-nistp521',
-    //         'diffie-hellman-group-exchange-sha256',
-    //         'diffie-hellman-group14-sha1',
-    //       ],
-    //       cipher: [
-    //         'aes128-ctr',
-    //         'aes192-ctr',
-    //         'aes256-ctr',
-    //         'aes128-gcm',
-    //         'aes128-gcm@openssh.com',
-    //         'aes256-gcm',
-    //         'aes256-gcm@openssh.com',
-    //         'aes256-cbc',
-    //       ],
-    //       hmac: ['hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'],
-    //       compress: ['none', 'zlib@openssh.com', 'zlib'],
-    //     },
-    //     keepaliveInterval: 120000,
-    //     keepaliveCountMax: 10,
-    //     allowedSubnets: [],
-    //     term: 'xterm-color',
-    //     terminal: {
-    //       cursorBlink: true,
-    //       scrollback: 10000,
-    //       tabStopWidth: 8,
-    //       bellStyle: 'sound'
-    //     },
-    //     allowreplay: true,
-    //     allowreauth: true,
-    //     mrhsession: 'none',
-    //     serverlog: { client: false, server: false },
-    //     readyTimeout: 20000
-    //   },
-    //   ...socket.request.session,
-    // }
-
-
     // if websocket connection arrives without an express session, kill it
     if (!socket.request.session) {
       socket.emit('401 UNAUTHORIZED');

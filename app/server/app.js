@@ -172,60 +172,62 @@ app.use((err, req, res) => {
 
 // bring up socket
 io.on('connection', (socket) => {
-  const { host, password, port, readyTimeout, cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground } = socket.request._query;
+  const { host, password, port, readyTimeout, cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.request._query;
 
-  socket.request.session.username = 'user';
-  socket.request.session.userpassword = password;
-  socket.request.session.privatekey = null;
+  if (fromApp) {
+    socket.request.session.username = 'user';
+    socket.request.session.userpassword = password;
+    socket.request.session.privatekey = null;
 
-  socket.request.session.ssh = {
-    host:
-      config.ssh.host ||
-      (validator.isIP(`${host}`) && host) ||
-      (validator.isFQDN(host) && host) ||
-      (/^(([a-z]|[A-Z]|[0-9]|[!^(){}\-_~])+)?\w$/.test(host) && host),
-    port:
-      (validator.isInt(`${port}`, { min: 1, max: 65535 }) && port) ||
-      config.ssh.port,
-    localAddress: config.ssh.localAddress,
-    localPort: config.ssh.localPort,
-    header: {
-      name: header || config.header.text,
-      background: headerBackground || config.header.background,
-    },
-    algorithms: config.algorithms,
-    keepaliveInterval: config.ssh.keepaliveInterval,
-    keepaliveCountMax: config.ssh.keepaliveCountMax,
-    allowedSubnets: config.ssh.allowedSubnets,
-    term: (sshterm && /^(([a-z]|[A-Z]|[0-9]|[!^(){}\-_~])+)?\w$/.test(sshterm)) || config.ssh.term,
-    terminal: {
-      cursorBlink: validator.isBoolean(`${cursorBlink}`)
-        ? myutil.parseBool(cursorBlink)
-        : config.terminal.cursorBlink,
-      scrollback:
-        validator.isInt(`${scrollback}`, { min: 1, max: 200000 }) && scrollback
-          ? scrollback
-          : config.terminal.scrollback,
-      tabStopWidth:
-        validator.isInt(`${tabStopWidth}`, { min: 1, max: 100 }) && tabStopWidth
-          ? tabStopWidth
-          : config.terminal.tabStopWidth,
-      bellStyle:
-        bellStyle && ['sound', 'none'].indexOf(bellStyle) > -1
-          ? bellStyle
-          : config.terminal.bellStyle,
-    },
-    allowreplay: config.options.challengeButton,
-    allowreauth: config.options.allowreauth || false,
-    serverlog: {
-      client: config.serverlog.client || false,
-      server: config.serverlog.server || false,
-    },
-    readyTimeout:
-      (validator.isInt(`${readyTimeout}`, { min: 1, max: 300000 }) && req.query.readyTimeout) ||
-      config.ssh.readyTimeout,
-  };
-
+    socket.request.session.ssh = {
+      host:
+        config.ssh.host ||
+        (validator.isIP(`${host}`) && host) ||
+        (validator.isFQDN(host) && host) ||
+        (/^(([a-z]|[A-Z]|[0-9]|[!^(){}\-_~])+)?\w$/.test(host) && host),
+      port:
+        (validator.isInt(`${port}`, { min: 1, max: 65535 }) && port) ||
+        config.ssh.port,
+      localAddress: config.ssh.localAddress,
+      localPort: config.ssh.localPort,
+      header: {
+        name: header || config.header.text,
+        background: headerBackground || config.header.background,
+      },
+      algorithms: config.algorithms,
+      keepaliveInterval: config.ssh.keepaliveInterval,
+      keepaliveCountMax: config.ssh.keepaliveCountMax,
+      allowedSubnets: config.ssh.allowedSubnets,
+      term: (sshterm && /^(([a-z]|[A-Z]|[0-9]|[!^(){}\-_~])+)?\w$/.test(sshterm)) || config.ssh.term,
+      terminal: {
+        cursorBlink: validator.isBoolean(`${cursorBlink}`)
+          ? myutil.parseBool(cursorBlink)
+          : config.terminal.cursorBlink,
+        scrollback:
+          validator.isInt(`${scrollback}`, { min: 1, max: 200000 }) && scrollback
+            ? scrollback
+            : config.terminal.scrollback,
+        tabStopWidth:
+          validator.isInt(`${tabStopWidth}`, { min: 1, max: 100 }) && tabStopWidth
+            ? tabStopWidth
+            : config.terminal.tabStopWidth,
+        bellStyle:
+          bellStyle && ['sound', 'none'].indexOf(bellStyle) > -1
+            ? bellStyle
+            : config.terminal.bellStyle,
+      },
+      allowreplay: config.options.challengeButton,
+      allowreauth: config.options.allowreauth || false,
+      serverlog: {
+        client: config.serverlog.client || false,
+        server: config.serverlog.server || false,
+      },
+      readyTimeout:
+        (validator.isInt(`${readyTimeout}`, { min: 1, max: 300000 }) && req.query.readyTimeout) ||
+        config.ssh.readyTimeout,
+    };
+  }
+  
   appSocket(socket)
 });
 

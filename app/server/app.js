@@ -18,9 +18,9 @@ const server = require('http').Server(app);
 const validator = require('validator');
 const favicon = require('serve-favicon');
 const io = require('socket.io')(server, {
-  serveClient: false,
-  path: '/ssh/socket.io',
-  origins: config.http.origins,
+  // serveClient: false,
+  // path: '/ssh/socket.io',
+  // origins: config.http.origins,
   cors: {
     origin: "*",
   },

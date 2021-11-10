@@ -174,6 +174,10 @@ app.use((err, req, res) => {
 io.on('connection', (socket) => {
   const { host, password, port, readyTimeout, cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground } = socket.request._query;
 
+  socket.request.session.username = 'user';
+  socket.request.session.userpassword = password;
+  socket.request.session.privatekey = null;
+
   socket.request.session.ssh = {
     host:
       config.ssh.host ||

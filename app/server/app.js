@@ -23,9 +23,11 @@ const io = require('socket.io')(server, {
   cors: {
     origin: "*",
   },
-  // allowRequest: (req, callback)=>{
-  //   return callback(null, true)
-  // }
+  allowRequest: (req, callback)=>{
+    console.log(2222, req.session);
+    
+    return callback(null, true)
+  }
 });
 const session = require('express-session')({
   secret: config.session.secret,

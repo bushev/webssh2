@@ -36,11 +36,6 @@ const session = require('express-session')({
   unset: 'destroy',
 });
 
-io.use(function (socket, next) {
-  console.log(99999);
-  session(socket.request, socket.request.res || {}, next);
-});
-
 const appSocket = require('./socket');
 const expressOptions = require('./expressOptions');
 const myutil = require('./util');
@@ -79,6 +74,9 @@ module.exports = { server, config };
 app.use(cors());
 app.use(safeShutdownGuard);
 app.use(session);
+io.use(function (socket, next) {
+  session(socket.request, {}, next);
+});
 app.use(myutil.basicAuth);
 if (config.accesslog) app.use(logger('common'));
 app.disable('x-powered-by');
@@ -164,9 +162,6 @@ app.get('/ssh/host/:host?', (req, res) => {
   if (req.session.ssh.header.background) validator.escape(req.session.ssh.header.background);
 });
 
-app.get("/", function (req, res) {
-  console.log(111111, req.session);
-});
 
 // express error handling
 app.use((req, res) => {
@@ -179,9 +174,17 @@ app.use((err, req, res) => {
 });
 
 // bring up socket
+// io.on('connection', (socket) => {
+//   console.log(22222, socket.request.session);
+//   appSocket(socket)
+// });
+
 io.on('connection', (socket) => {
-  console.log(22222, socket.request.session);
-  appSocket(socket)
+  const session = socket.request.session;
+
+  console.log(session);
+  session.connections++;
+  session.save();
 });
 
 // socket.io

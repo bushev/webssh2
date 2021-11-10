@@ -23,12 +23,9 @@ const io = require('socket.io')(server, {
   cors: {
     origin: "*",
   },
-  allowRequest: (req, callback)=>{
-    console.log(333, req._query);
-    console.log(333, req.query);
-
-    return callback(null, true)
-  }
+  // allowRequest: (req, callback)=>{
+  //   return callback(null, true)
+  // }
 });
 const session = require('express-session')({
   secret: config.session.secret,
@@ -73,6 +70,9 @@ function stopApp(reason) {
 module.exports = { server, config };
 // express
 app.use(safeShutdownGuard);
+io.use(function(socket, next) {
+  session(socket.request, socket.request.res || {}, next);
+});
 app.use(session);
 app.use(myutil.basicAuth);
 if (config.accesslog) app.use(logger('common'));

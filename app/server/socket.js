@@ -38,6 +38,7 @@ module.exports = function appSocket(socket) {
      */
     // eslint-disable-next-line complexity
     function SSHerror(myFunc, err) {
+      console.log('SSHerror::',myFunc, err);
       let theError;
       if (socket.request.session) {
         // we just want the first error of the session to pass to the client
@@ -195,6 +196,7 @@ module.exports = function appSocket(socket) {
                   : undefined,
             };
             SSHerror('STREAM CLOSE', errMsg);
+            console.log('STREAM CLOSE',errMsg)
             conn.end();
           });
           stream.stderr.on('data', (data) => {

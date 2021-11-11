@@ -150,7 +150,7 @@ module.exports = function appSocket(socket) {
             });
           });
 
-          socket.on('run', (task, callback) => {
+          socket.on('initiate', (task, callback) => {
             stream.write(`cd ${task?.cwd} && clear\r`);
             stream.write(`${task.command}\r`, (err) => {
               callback && callback({ success: !err, error: err });

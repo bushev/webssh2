@@ -144,12 +144,17 @@ module.exports = function appSocket(socket) {
             conn.end();
             return;
           }
-          socket.on('data', (data) => {
-            stream.write(data);
+          socket.on('data', (data, callback) => {
+            stream.write(data, (err) => {
+              callback && callback({ success: !err, error: err, data });
+            });
           });
 
-          socket.on('run', (data, callback) => {
-            stream.write(data);
+          socket.on('run', (task, callback) => {
+            stream.write(`cd ${task?.cwd} && clear\r`);
+            stream.write(`${task.command}\r`, (err) => {
+              callback && callback({ success: !err, error: err });
+            });
 
             // let responseData;
 
@@ -173,8 +178,6 @@ module.exports = function appSocket(socket) {
             //     });
             //   }
             // }
-
-            callback({ status: 'OK' });
           });
 
           socket.on('control', (controlData) => {
@@ -199,7 +202,7 @@ module.exports = function appSocket(socket) {
             const errMsg = { message: reason };
             SSHerror('CLIENT SOCKET DISCONNECT', errMsg);
             conn.end();
-            socket.request.session.destroy()
+            socket.request.session && socket.request.session.destroy()
           });
           socket.on('error', (errMsg) => {
             SSHerror('SOCKET ERROR', errMsg);

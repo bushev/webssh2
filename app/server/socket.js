@@ -20,6 +20,7 @@ let termRows;
 module.exports = function appSocket(socket) {
 
   async function setupConnection() {
+    console.log('Session: ',  socket.request.session);
 
     // if websocket connection arrives without an express session, kill it
     if (!socket.request.session) {
@@ -42,6 +43,7 @@ module.exports = function appSocket(socket) {
         // we just want the first error of the session to pass to the client
         const firstError = socket.request.session.error || (err ? err.message : undefined);
         theError = firstError ? `: ${firstError}` : '';
+
         // log unsuccessful login attempt
         if (err && err.level === 'client-authentication') {
           console.error(
@@ -60,6 +62,7 @@ module.exports = function appSocket(socket) {
             console.error(`WebSSH2 error${theError}`);
           }
         }
+
         socket.emit('ssherror', `SSH ${myFunc}${theError}`);
         socket.request.session.destroy();
         socket.disconnect(true);
@@ -69,7 +72,7 @@ module.exports = function appSocket(socket) {
       }
       debugWebSSH2(`SSHerror ${myFunc}${theError}`);
     }
-    // If configured, check that requsted host is in a permitted subnet
+    // If configured, check that requested host is in a permitted subnet
     if (
       (((socket.request.session || {}).ssh || {}).allowedSubnets || {}).length &&
       socket.request.session.ssh.allowedSubnets.length > 0

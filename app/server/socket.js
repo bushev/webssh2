@@ -20,8 +20,6 @@ let termRows;
 module.exports = function appSocket(socket) {
 
   async function setupConnection() {
-    console.log('Session: ',  socket.request.session);
-
     // if websocket connection arrives without an express session, kill it
     if (!socket.request.session) {
       socket.emit('401 UNAUTHORIZED');
@@ -148,6 +146,7 @@ module.exports = function appSocket(socket) {
             conn.end();
             return;
           }
+
           socket.on('data', (data, callback) => {
             stream.write(data, (err) => {
               callback && callback({ success: !err, error: err, data });
@@ -184,9 +183,15 @@ module.exports = function appSocket(socket) {
           });
 
           stream.on('data', (data) => {
+            console.log(1111111113, data);
+
             socket.emit('data', data.toString('utf-8'));
           });
           stream.on('close', (code, signal) => {
+            console.log(1111111112, code, signal);
+
+
+
             const errMsg = {
               message:
                 code || signal

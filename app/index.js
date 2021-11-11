@@ -11,6 +11,8 @@
 const { config } = require('./server/app');
 const { server } = require('./server/app');
 
+console.log('config', config);
+
 server.listen({ host: config.listen.ip, port: config.listen.port });
 
 // eslint-disable-next-line no-console

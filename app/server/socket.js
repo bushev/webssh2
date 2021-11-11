@@ -183,7 +183,7 @@ module.exports = function appSocket(socket) {
           });
 
           stream.on('data', (data) => {
-            console.log(1111111113, data);
+            console.log(1111111113, data.toString('utf-8'));
 
             socket.emit('data', data.toString('utf-8'));
           });

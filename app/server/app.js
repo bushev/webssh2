@@ -25,6 +25,13 @@ const io = require('socket.io')(server, {
     origin: "*",
   }
 });
+const session = require('express-session')({
+  secret: config.session.secret,
+  name: config.session.name,
+  resave: true,
+  saveUninitialized: false,
+  unset: 'destroy',
+});
 
 const appSocket = require('./socket');
 const expressOptions = require('./expressOptions');
@@ -60,19 +67,14 @@ function stopApp(reason) {
 }
 
 module.exports = { server, config };
-
-const session = require('express-session')({
-  secret: config.session.secret,
-  name: config.session.name,
-  resave: true,
-  saveUninitialized: false,
-  unset: 'destroy',
-});
-
 // express
 app.use(cors());
 app.use(safeShutdownGuard);
 app.use(session);
+io.use(function (socket, next) {
+  session(socket.request, {}, next);
+});
+
 app.use(myutil.basicAuth);
 if (config.accesslog) app.use(logger('common'));
 app.disable('x-powered-by');
@@ -228,13 +230,6 @@ io.on('connection', (socket) => {
   }
   
   appSocket(socket)
-});
-
-
-// socket.io
-// expose express session with socket.request.session
-io.use((socket, next) => {
-  socket.request.res ? session(socket.request, socket.request.res, next) : next(next); // eslint disable-line
 });
 
 io.on('connection', (socket) => {

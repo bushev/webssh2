@@ -150,36 +150,6 @@ module.exports = function appSocket(socket) {
             });
           });
 
-          socket.on('initiate', (task, callback) => {
-            stream.write(`cd ${task?.cwd} && clear\r`);
-            stream.write(`${task.command}\r`, (err) => {
-              callback && callback({ success: !err, error: err });
-            });
-
-            // let responseData;
-
-            // try {
-            //   const { authToken } = this.parseAndValidateInitializeRequest(requestData);
-            //   const { worker, userId } = await this.createSession({ authToken, socket, id });
-            //   responseData = await this.initiateWorker({ worker, userId, socket, id, requestData });
-            // } catch (e) {
-            //   if (e instanceof BadRequestError) {
-            //     callback({ success: false, error: e.message });
-            //   } else if (e instanceof ForbiddenError) {
-            //     callback({ success: false, error: e.message });
-            //   } else if (e instanceof UnauthorizedError) {
-            //     callback({ success: false, error: e.message });
-            //   } else {
-            //     logger.error(e.stack);
-            //     callback({
-            //       success: false,
-            //       error:
-            //         'Our server is down for maintenance. We expect to be back in less than an hour. Thank you for your patience.'
-            //     });
-            //   }
-            // }
-          });
-
           socket.on('control', (controlData) => {
             switch (controlData) {
               case 'replayCredentials':

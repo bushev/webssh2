@@ -135,7 +135,7 @@ module.exports = function appSocket(socket) {
       socket.emit('statusBackground', 'green');
       socket.emit('allowreplay', socket.request.session.ssh.allowreplay);
       socket.emit('ready', {});
-      
+
       conn.shell(
         {
           term: socket.request.session.ssh.term,
@@ -167,7 +167,8 @@ module.exports = function appSocket(socket) {
             }
           });
           socket.on('resize', (data) => {
-            stream.setWindow(data.rows, data.cols);
+            const { rows = 0, cols = 0, height = 0, width = 0 } = data;
+            stream.setWindow(rows, cols, height, width);
           });
           socket.on('disconnecting', (reason) => {
             debugWebSSH2(`SOCKET DISCONNECTING: ${reason}`);

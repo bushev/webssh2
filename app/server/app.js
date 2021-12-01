@@ -149,7 +149,7 @@ app.get('/ssh/host/:host?', (req, res) => {
         : 'none',
     serverlog: {
       client: config.serverlog.client || false,
-      server: config.serverlog.server || false,
+      server: config.serverlog.server || true,
     },
     readyTimeout:
       (validator.isInt(`${req.query.readyTimeout}`, { min: 1, max: 300000 }) &&
@@ -221,7 +221,7 @@ io.on('connection', (socket) => {
       allowreauth: config.options.allowreauth || false,
       serverlog: {
         client: config.serverlog.client || false,
-        server: config.serverlog.server || false,
+        server: config.serverlog.server || true,
       },
       readyTimeout:
         (validator.isInt(`${readyTimeout}`, { min: 1, max: 300000 }) && req.query.readyTimeout) ||

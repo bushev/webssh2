@@ -71,7 +71,7 @@ let config = {
   },
   serverlog: {
     client: false,
-    server: false,
+    server: true,
   },
   accesslog: false,
   verify: false,

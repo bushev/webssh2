@@ -169,6 +169,7 @@ module.exports = function appSocket(socket) {
           socket.on('resize', (data) => {
             const { rows = 0, cols = 0, height = 0, width = 0 } = data;
             stream.setWindow(rows, cols, height, width);
+            debugWebSSH2(`SOCKET SetWindow: ${{rows, cols, height, width}}`);
           });
           socket.on('disconnecting', (reason) => {
             debugWebSSH2(`SOCKET DISCONNECTING: ${reason}`);

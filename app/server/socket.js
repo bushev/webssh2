@@ -134,7 +134,7 @@ module.exports = function appSocket(socket) {
       socket.emit('status', 'SSH CONNECTION ESTABLISHED');
       socket.emit('statusBackground', 'green');
       socket.emit('allowreplay', socket.request.session.ssh.allowreplay);
-      socket.emit('ready', {});
+    
 
       conn.shell(
         {
@@ -148,7 +148,9 @@ module.exports = function appSocket(socket) {
             conn.end();
             return;
           }
-
+          
+          socket.emit('ready', {});
+          
           socket.on('data', (data, callback) => {
             stream.write(data, (err) => {
               callback && callback({ success: !err, error: err, data });

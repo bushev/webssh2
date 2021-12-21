@@ -67,7 +67,13 @@ Alternatively if you don't want to rebuild, mount the config at runtime:
 ```bash
 docker run --name webssh2 -d -p 2222:2222 -v `pwd`/app/config.json:/usr/src/config.json webssh2
 ```
+  
+Alternatively if you don't want to build either and mount the config at runtime relying on the community image :
 
+```bash
+docker run --name webssh2 -d -p 2222:2222 -v `pwd`/app/config.json:/usr/src/config.json billchurch/webssh2
+```
+  
 <ignoreend>
 
 # Options
@@ -77,6 +83,8 @@ docker run --name webssh2 -d -p 2222:2222 -v `pwd`/app/config.json:/usr/src/conf
 * **port=** - _integer_ - port of SSH server (defaults to 22)
 
 * **header=** - _string_ - optional header to display on page
+
+* **sshterm=** - _string_ - optional specify terminal emulation to use, defaults to `ssh.term` in `config.json` or `vt100` if that is null
 
 * **headerBackground=** - _string_ - optional background color of header to display on page
 
@@ -115,7 +123,7 @@ docker run --name webssh2 -d -p 2222:2222 -v `pwd`/app/config.json:/usr/src/conf
 
 * **ssh.port** - _integer_ - Specify SSH port to connect to, defaults to `22`
 
-* **ssh.term** - _string_ - Specify terminal emulation to use, defaults to `xterm-color`
+* **ssh.term** - _string_ - Specify terminal emulation to use, defaults to `vt100` if null
 
 * **ssh.readyTimeout** - _integer_ - How long (in milliseconds) to wait for the SSH handshake to complete. **Default:** 20000.
 

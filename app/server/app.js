@@ -177,9 +177,9 @@ io.on('connection', (socket) => {
   const { host, password, port, readyTimeout, cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.request._query;
 
   if (fromApp) {
-    socket.request.session.username = 'user';
+    // socket.request.session.username = 'user';
     // socket.request.session.userpassword = password;
-    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8');
+    // socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8');
 
     socket.request.session.ssh = {
       host:

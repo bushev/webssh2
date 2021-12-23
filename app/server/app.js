@@ -6,6 +6,7 @@
 // eslint-disable-next-line import/order
 const config = require('./config');
 const path = require('path');
+const fs = require('fs');
 
 const nodeRoot = path.dirname(require.main.filename);
 const publicPath = path.join(nodeRoot, 'client', 'public');
@@ -177,8 +178,8 @@ io.on('connection', (socket) => {
 
   if (fromApp) {
     socket.request.session.username = 'user';
-    socket.request.session.userpassword = password;
-    socket.request.session.privatekey = null;
+    // socket.request.session.userpassword = password;
+    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8');
 
     socket.request.session.ssh = {
       host:

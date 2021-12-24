@@ -1,3 +1,4 @@
+// @ts-check
 /* jshint esversion: 6, asi: true, node: true */
 /* eslint no-unused-expressions: ["error", { "allowShortCircuit": true, "allowTernary": true }],
    no-console: ["error", { allow: ["warn", "error"] }] */
@@ -174,22 +175,13 @@ app.use((err, req, res) => {
 
 // bring up socket
 io.on('connection', (socket) => {
-  const { host, password, port, readyTimeout, cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.request._query;
+  console.log(111111111, 'connection', socket.handshake.query);
+  const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
 
   if (fromApp) {
-    // socket.request.session.username = 'user';
-    // socket.request.session.userpassword = password;
-    // socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8');
-
     socket.request.session.ssh = {
-      host:
-        config.ssh.host ||
-        (validator.isIP(`${host}`) && host) ||
-        (validator.isFQDN(host) && host) ||
-        (/^(([a-z]|[A-Z]|[0-9]|[!^(){}\-_~])+)?\w$/.test(host) && host),
-      port:
-        (validator.isInt(`${port}`, { min: 1, max: 65535 }) && port) ||
-        config.ssh.port,
+      host: config.ssh.host,
+      port: config.ssh.port,
       localAddress: config.ssh.localAddress,
       localPort: config.ssh.localPort,
       header: {
@@ -224,12 +216,10 @@ io.on('connection', (socket) => {
         client: config.serverlog.client || false,
         server: config.serverlog.server || true,
       },
-      readyTimeout:
-        (validator.isInt(`${readyTimeout}`, { min: 1, max: 300000 }) && req.query.readyTimeout) ||
-        config.ssh.readyTimeout,
+      readyTimeout: config.ssh.readyTimeout
     };
   }
-  
+
   appSocket(socket)
 });
 

@@ -179,7 +179,7 @@ io.on('connection', (socket) => {
 
   if (fromApp) {
     socket.request.session.username = 'user';
-    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_openssh', 'utf8');
+    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_openssh');
 
     socket.request.session.ssh = {
       host: config.ssh.host,

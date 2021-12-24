@@ -226,13 +226,28 @@ module.exports = function appSocket(socket) {
     });
 
     console.log('BEFORE SSH', socket.request.session);
-    
+
     if (
       socket.request.session.username &&
-      (socket.request.session.userpassword || socket.request.session.privatekey || socket.request.session.authenticated) &&
+      (socket.request.session.userpassword || socket.request.session.privatekey) &&
       socket.request.session.ssh
     ) {
       // console.log('hostkeys: ' + hostkeys[0].[0])
+
+      console.log('BEFORE SSH IF',{
+        host: socket.request.session.ssh.host,
+        port: socket.request.session.ssh.port,
+        localAddress: socket.request.session.ssh.localAddress,
+        localPort: socket.request.session.ssh.localPort,
+        username: socket.request.session.username,
+        password: socket.request.session.userpassword,
+        privateKey: socket.request.session.privatekey,
+        tryKeyboard: true,
+        algorithms: socket.request.session.ssh.algorithms,
+        readyTimeout: socket.request.session.ssh.readyTimeout,
+        keepaliveInterval: socket.request.session.ssh.keepaliveInterval,
+        keepaliveCountMax: socket.request.session.ssh.keepaliveCountMax,
+      });
 
       conn.connect({
         host: socket.request.session.ssh.host,
@@ -240,8 +255,8 @@ module.exports = function appSocket(socket) {
         localAddress: socket.request.session.ssh.localAddress,
         localPort: socket.request.session.ssh.localPort,
         username: socket.request.session.username,
-        // password: socket.request.session.userpassword,
-        // privateKey: socket.request.session.privatekey,
+        password: socket.request.session.userpassword,
+        privateKey: socket.request.session.privatekey,
         tryKeyboard: true,
         algorithms: socket.request.session.ssh.algorithms,
         readyTimeout: socket.request.session.ssh.readyTimeout,

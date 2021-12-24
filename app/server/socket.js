@@ -230,9 +230,8 @@ module.exports = function appSocket(socket) {
 
     if (
       socket.request.session.username &&
-      (socket.request.session.userpassword || socket.request.session.privatekey) &&
-      socket.request.session.ssh ||
-      socket.request.session.authenticated
+      ((socket.request.session.userpassword || socket.request.session.privatekey) || socket.request.session.ssh.authenticated) &&
+      socket.request.session.ssh
     ) {
       // console.log('hostkeys: ' + hostkeys[0].[0])
 

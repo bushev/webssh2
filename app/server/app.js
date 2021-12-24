@@ -178,8 +178,10 @@ io.on('connection', (socket) => {
   const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
 
   if (fromApp) {
+    socket.request.session.username = 'user';
+    socket.request.session.authenticated = true;
+
     socket.request.session.ssh = {
-      authenticated: true,
       host: config.ssh.host,
       port: config.ssh.port,
       localAddress: config.ssh.localAddress,

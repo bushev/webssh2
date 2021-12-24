@@ -178,8 +178,8 @@ io.on('connection', (socket) => {
   const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
 
   if (fromApp) {
-    socket.request.session.username = 'user';
-    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8');
+    // socket.request.session.username = 'user';
+    // socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8');
 
     socket.request.session.ssh = {
       host: config.ssh.host,

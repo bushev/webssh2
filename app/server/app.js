@@ -180,7 +180,7 @@ io.on('connection', (socket) => {
 
   if (fromApp) {
     socket.request.session.username = 'user';
-    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8').replace(new RegExp('\\n', 'g'), '\n');
+    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8').replace(/\\n/g, '\n');
 
     socket.request.session.ssh = {
       host: config.ssh.host,

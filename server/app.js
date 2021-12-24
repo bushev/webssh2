@@ -174,56 +174,83 @@ app.use((err, req, res) => {
 });
 
 // bring up socket
-io.on('connection', (socket) => {
-  const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
+io
+  .use(async function (socket, next) {
+    const query = socket?.handshake?.query || {};
 
-  if (fromApp) {
-    socket.request.session.username = 'user';
-    socket.request.session.authenticated = true;
+    const signature = query['Signature'];
+    const signatureId = query['SignatureId'];
+    let keys = [];
 
-    socket.request.session.ssh = {
-      host: config.ssh.host,
-      port: config.ssh.port,
-      localAddress: config.ssh.localAddress,
-      localPort: config.ssh.localPort,
-      header: {
-        name: header || config.header.text,
-        background: headerBackground || config.header.background,
-      },
-      algorithms: config.algorithms,
-      keepaliveInterval: config.ssh.keepaliveInterval,
-      keepaliveCountMax: config.ssh.keepaliveCountMax,
-      allowedSubnets: config.ssh.allowedSubnets,
-      term: (sshterm && /^(([a-z]|[A-Z]|[0-9]|[!^(){}\-_~])+)?\w$/.test(sshterm)) || config.ssh.term,
-      terminal: {
-        cursorBlink: validator.isBoolean(`${cursorBlink}`)
-          ? myutil.parseBool(cursorBlink)
-          : config.terminal.cursorBlink,
-        scrollback:
-          validator.isInt(`${scrollback}`, { min: 1, max: 200000 }) && scrollback
-            ? scrollback
-            : config.terminal.scrollback,
-        tabStopWidth:
-          validator.isInt(`${tabStopWidth}`, { min: 1, max: 100 }) && tabStopWidth
-            ? tabStopWidth
-            : config.terminal.tabStopWidth,
-        bellStyle:
-          bellStyle && ['sound', 'none'].indexOf(bellStyle) > -1
-            ? bellStyle
-            : config.terminal.bellStyle,
-      },
-      allowreplay: config.options.challengeButton,
-      allowreauth: config.options.allowreauth || false,
-      serverlog: {
-        client: config.serverlog.client || false,
-        server: config.serverlog.server || true,
-      },
-      readyTimeout: config.ssh.readyTimeout
-    };
-  }
+    try {
+      keys = JSON.parse(await fs.readFileSync('/home/user/.codesnack-ide/public_keys.json', 'utf-8'));
+    } catch (error) {
+      console.log('Webssh::Auth error: No a public key file exists');
+      throw new Error('Unauthorized');
+    }
 
-  appSocket(socket)
-});
+    const key = keys.find((key) => key.id === signatureId);
+
+    try {
+      await server.checkSignatureAuth({ signature, key });
+      socket.request.session.authenticated = true;
+      next()
+    } catch (error) {
+      socket.disconnect();
+      throw error;
+    }
+  })
+  .on('connection', (socket) => {
+    console.log(111112121212121212);
+    const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
+
+    if (fromApp) {
+
+      console.log(11111111111, 'onconnect', server.checkSignatureAuth);
+      socket.request.session.username = 'user';
+      socket.request.session.ssh = {
+        host: config.ssh.host,
+        port: config.ssh.port,
+        localAddress: config.ssh.localAddress,
+        localPort: config.ssh.localPort,
+        header: {
+          name: header || config.header.text,
+          background: headerBackground || config.header.background,
+        },
+        algorithms: config.algorithms,
+        keepaliveInterval: config.ssh.keepaliveInterval,
+        keepaliveCountMax: config.ssh.keepaliveCountMax,
+        allowedSubnets: config.ssh.allowedSubnets,
+        term: (sshterm && /^(([a-z]|[A-Z]|[0-9]|[!^(){}\-_~])+)?\w$/.test(sshterm)) || config.ssh.term,
+        terminal: {
+          cursorBlink: validator.isBoolean(`${cursorBlink}`)
+            ? myutil.parseBool(cursorBlink)
+            : config.terminal.cursorBlink,
+          scrollback:
+            validator.isInt(`${scrollback}`, { min: 1, max: 200000 }) && scrollback
+              ? scrollback
+              : config.terminal.scrollback,
+          tabStopWidth:
+            validator.isInt(`${tabStopWidth}`, { min: 1, max: 100 }) && tabStopWidth
+              ? tabStopWidth
+              : config.terminal.tabStopWidth,
+          bellStyle:
+            bellStyle && ['sound', 'none'].indexOf(bellStyle) > -1
+              ? bellStyle
+              : config.terminal.bellStyle,
+        },
+        allowreplay: config.options.challengeButton,
+        allowreauth: config.options.allowreauth || false,
+        serverlog: {
+          client: config.serverlog.client || false,
+          server: config.serverlog.server || true,
+        },
+        readyTimeout: config.ssh.readyTimeout
+      };
+    }
+
+    appSocket(socket)
+  });
 
 io.on('connection', (socket) => {
   connectionCount += 1;

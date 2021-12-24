@@ -225,7 +225,7 @@ module.exports = function appSocket(socket) {
       debugWebSSH2("conn.on('keyboard-interactive')");
       finish([socket.request.session.userpassword]);
     });
-    
+
     console.log('BEFORE SSH', socket.request.session);
 
     if (
@@ -236,6 +236,21 @@ module.exports = function appSocket(socket) {
     ) {
       // console.log('hostkeys: ' + hostkeys[0].[0])
 
+      console.log('BEFORE SSH in IF', {
+        host: socket.request.session.ssh.host,
+        port: socket.request.session.ssh.port,
+        localAddress: socket.request.session.ssh.localAddress,
+        localPort: socket.request.session.ssh.localPort,
+        username: socket.request.session.username,
+        password: socket.request.session.userpassword,
+        privateKey: socket.request.session.privatekey,
+        tryKeyboard: true,
+        algorithms: socket.request.session.ssh.algorithms,
+        readyTimeout: socket.request.session.ssh.readyTimeout,
+        keepaliveInterval: socket.request.session.ssh.keepaliveInterval,
+        keepaliveCountMax: socket.request.session.ssh.keepaliveCountMax,
+        debug: debug('ssh2'),
+      });
 
       conn.connect({
         host: socket.request.session.ssh.host,

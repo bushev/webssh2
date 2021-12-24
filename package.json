@@ -1,7 +1,6 @@
 {
   "name": "codesnack-webssh",
   "version": "0.0.1",
-  "bin": "./index.js",
   "description": "",
   "homepage": "https://github.com/billchurch/WebSSH2",
   "private": true,
@@ -27,11 +26,9 @@
     "validator": "^13.7.0"
   },
   "scripts": {
-    "start": "node index.js",
     "build": "webpack --progress --config scripts/webpack.prod.js",
     "builddev": "webpack --progress --config scripts/webpack.dev.js",
     "analyze": "webpack --json --config scripts/webpack.prod.js | webpack-bundle-size-analyzer",
-    "watch": "nodemon index.js",
     "cleanmac": "find . -name '.DS_Store' -type f -delete"
   },
   "devDependencies": {

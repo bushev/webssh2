@@ -171,7 +171,6 @@ module.exports = function appSocket(socket) {
           socket.on('resize', (data) => {
             const { rows = 0, cols = 0, height = 0, width = 0 } = data;
             stream.setWindow(rows, cols, height, width);
-            console.log(11111, 'SetWindow', { rows, cols, height, width });
             debugWebSSH2(`SOCKET SetWindow: ${{ rows, cols, height, width }}`);
           });
           socket.on('disconnecting', (reason) => {
@@ -227,10 +226,10 @@ module.exports = function appSocket(socket) {
     });
 
     console.log('BEFORE SSH', socket.request.session);
-
+    
     if (
       socket.request.session.username &&
-      ((socket.request.session.userpassword || socket.request.session.privatekey) || socket.request.session.ssh.authenticated) &&
+      (socket.request.session.userpassword || socket.request.session.privatekey || socket.request.session.authenticated) &&
       socket.request.session.ssh
     ) {
       // console.log('hostkeys: ' + hostkeys[0].[0])

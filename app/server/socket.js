@@ -134,7 +134,7 @@ module.exports = function appSocket(socket) {
       socket.emit('status', 'SSH CONNECTION ESTABLISHED');
       socket.emit('statusBackground', 'green');
       socket.emit('allowreplay', socket.request.session.ssh.allowreplay);
-    
+
 
       conn.shell(
         {
@@ -148,9 +148,9 @@ module.exports = function appSocket(socket) {
             conn.end();
             return;
           }
-          
+
           socket.emit('ready', {});
-          
+
           socket.on('data', (data, callback) => {
             stream.write(data, (err) => {
               callback && callback({ success: !err, error: err, data });
@@ -171,8 +171,8 @@ module.exports = function appSocket(socket) {
           socket.on('resize', (data) => {
             const { rows = 0, cols = 0, height = 0, width = 0 } = data;
             stream.setWindow(rows, cols, height, width);
-            console.log(11111, 'SetWindow', {rows, cols, height, width});
-            debugWebSSH2(`SOCKET SetWindow: ${{rows, cols, height, width}}`);
+            console.log(11111, 'SetWindow', { rows, cols, height, width });
+            debugWebSSH2(`SOCKET SetWindow: ${{ rows, cols, height, width }}`);
           });
           socket.on('disconnecting', (reason) => {
             debugWebSSH2(`SOCKET DISCONNECTING: ${reason}`);
@@ -225,12 +225,18 @@ module.exports = function appSocket(socket) {
       debugWebSSH2("conn.on('keyboard-interactive')");
       finish([socket.request.session.userpassword]);
     });
+    
+    console.log('BEFORE SSH', socket.request.session);
+
     if (
       socket.request.session.username &&
       (socket.request.session.userpassword || socket.request.session.privatekey) &&
-      socket.request.session.ssh
+      socket.request.session.ssh ||
+      socket.request.session.authenticated
     ) {
       // console.log('hostkeys: ' + hostkeys[0].[0])
+
+
       conn.connect({
         host: socket.request.session.ssh.host,
         port: socket.request.session.ssh.port,

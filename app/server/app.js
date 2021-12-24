@@ -175,11 +175,11 @@ app.use((err, req, res) => {
 
 // bring up socket
 io.on('connection', (socket) => {
-  console.log(111111111, 'connection', config);
   const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
 
   if (fromApp) {
     socket.request.session.ssh = {
+      authenticated: true,
       host: config.ssh.host,
       port: config.ssh.port,
       localAddress: config.ssh.localAddress,

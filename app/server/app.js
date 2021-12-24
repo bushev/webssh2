@@ -175,7 +175,7 @@ app.use((err, req, res) => {
 
 // bring up socket
 io.on('connection', (socket) => {
-  console.log(111111111, 'connection', socket.handshake.query);
+  console.log(111111111, 'connection', config);
   const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
 
   if (fromApp) {

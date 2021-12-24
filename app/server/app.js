@@ -176,13 +176,10 @@ app.use((err, req, res) => {
 // bring up socket
 io.on('connection', (socket) => {
   const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
-  console.log(111111111, config);
-  console.log('READED_KEY', fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8'));
-  console.log('USER_KEY', config.user.privatekey);
 
   if (fromApp) {
     socket.request.session.username = 'user';
-    socket.request.session.privatekey = config.user.privatekey.replace(/\\n/g, '\n');
+    socket.request.session.privatekey = fs.readFileSync('/home/user/.ssh/id_rsa', 'utf8');
 
     socket.request.session.ssh = {
       host: config.ssh.host,

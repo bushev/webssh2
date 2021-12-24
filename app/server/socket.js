@@ -225,8 +225,6 @@ module.exports = function appSocket(socket) {
       finish([socket.request.session.userpassword]);
     });
 
-    console.log('BEFORE SSH', socket.request.session);
-
     if (
       socket.request.session.username &&
       (socket.request.session.userpassword || socket.request.session.privatekey) &&
@@ -234,7 +232,7 @@ module.exports = function appSocket(socket) {
     ) {
       // console.log('hostkeys: ' + hostkeys[0].[0])
 
-      console.log('BEFORE SSH IF',{
+      console.log('BEFORE SSH', {
         host: socket.request.session.ssh.host,
         port: socket.request.session.ssh.port,
         localAddress: socket.request.session.ssh.localAddress,

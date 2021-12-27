@@ -203,8 +203,8 @@ function initSocket({ checkAuth }) {
     .use(async function (socket, next) {
       const query = socket?.handshake?.query || {};
 
-      const signature = query['signature'];
-      const signatureId = query['signatureId'];
+      const signature = query['Signature'];
+      const signatureId = query['SignatureId'];
 
       try {
         await checkAuth({ signature, signatureId });

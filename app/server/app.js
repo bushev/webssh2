@@ -217,7 +217,17 @@ function initSocket({ checkAuth }) {
       }
     })
     .on('connection', (socket) => {
-      const { cursorBlink, scrollback, tabStopWidth, bellStyle, sshterm, header, headerBackground, fromApp = false } = socket.handshake.query;
+      const {
+        cursorBlink,
+        scrollback,
+        tabStopWidth,
+        bellStyle,
+        sshterm,
+        header,
+        headerBackground,
+        fromApp = false,
+        initialCommand
+      } = socket.handshake.query;
 
       if (fromApp) {
         socket.request.session.username = 'user';
@@ -253,6 +263,7 @@ function initSocket({ checkAuth }) {
               bellStyle && ['sound', 'none'].indexOf(bellStyle) > -1
                 ? bellStyle
                 : config.terminal.bellStyle,
+            initialCommand: initialCommand || 'cd ~/ && clear',
           },
           allowreplay: config.options.challengeButton,
           allowreauth: config.options.allowreauth || false,

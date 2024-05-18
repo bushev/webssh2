@@ -10,10 +10,10 @@ const configPath = path.join(nodeRoot, 'config.json');
 let config = {
   listen: {
     ip: '0.0.0.0',
-    port: 2222,
+    port: 10001,
   },
   http: {
-    origins: ['localhost:2222'],
+    origins: ['*'],
   },
   user: {
     name: null,
@@ -71,7 +71,7 @@ let config = {
   },
   serverlog: {
     client: false,
-    server: false,
+    server: true,
   },
   accesslog: false,
   verify: false,
